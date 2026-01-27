@@ -1,19 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://bhnfd22clkcxs"]
+[gd_scene format=3 uid="uid://bhnfd22clkcxs"]
 
 [ext_resource type="PackedScene" uid="uid://rj2rd3ldyb5a" path="res://player.tscn" id="1_fj7yv"]
 [ext_resource type="Texture2D" uid="uid://c6gowkytnc5ex" path="res://Sprout Lands - Sprites - Basic pack/Tilesets/Bitmask references 1.png" id="1_tlwt5"]
 
-[node name="World" type="Node2D"]
+[node name="World" type="Node2D" unique_id=511925425]
 
-[node name="BitmaskReferences1" type="Sprite2D" parent="."]
+[node name="BitmaskReferences1" type="Sprite2D" parent="." unique_id=231683320]
 texture = ExtResource("1_tlwt5")
 
-[node name="CharacterBody2D" parent="." instance=ExtResource("1_fj7yv")]
+[node name="CharacterBody2D" parent="." unique_id=195693007 instance=ExtResource("1_fj7yv")]
 position = Vector2(87, -18)
 
-[node name="RemoteTransform2D" type="RemoteTransform2D" parent="CharacterBody2D"]
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="CharacterBody2D" unique_id=2097220741]
 remote_path = NodePath("../../Camera2D")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1178044754]
 position = Vector2(87, -18)
 zoom = Vector2(3, 3)
