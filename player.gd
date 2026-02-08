@@ -13,8 +13,6 @@ var playback : AnimationNodeStateMachinePlayback
 var pending_forced_dir: Vector2 = Vector2.ZERO
 var forced_move_queued := false
 
-
-	
 func _ready():
 	playback = animation_tree["parameters/playback"]
 	target_pos = global_position
@@ -28,10 +26,8 @@ func _physics_process(delta):
 		if distance < 1:
 			global_position = target_pos
 			moving = false
-
 			# queues a forced movement
 			pending_forced_dir = get_forced_direction(global_position)
-
 			select_animation(Vector2.ZERO)
 			return
 		# move slowly toward tile
@@ -56,7 +52,6 @@ func _physics_process(delta):
 		pending_forced_dir = Vector2.ZERO
 	else:
 		input_dir = Input.get_vector("left", "right", "up", "down")
-
 	
 	# Reset timer when no input
 	if input_dir == Vector2.ZERO:
@@ -74,12 +69,11 @@ func _physics_process(delta):
 		last_dir = input_dir
 		update_animation_parameters()
 		select_animation(Vector2.ZERO)
-
 		# if not forced movement delay the turn
 		if not forced_move_queued:
 			turn_timer = turn_delay
 			return
-
+		forced_move_queued = false
 	
 	# Don't move if still in turn delay
 	if turn_timer > 0:
@@ -87,17 +81,28 @@ func _physics_process(delta):
 	
 	var new_target = global_position + input_dir * tile_size
 	
-	# Don't move or animate if blocked
-	if not is_tile_passable(new_target):
+	# Check if movement is blocked
+	if not can_move_to(new_target, input_dir):
+		forced_move_queued = false
+		# Don't animate walk, just stay idle
 		return
- 
 	
 	# Same direction = move forward
-	target_pos = global_position + input_dir * tile_size
+	target_pos = new_target
 	moving = true
 	select_animation(input_dir)
 	update_animation_parameters()
+	forced_move_queued = false
+
+func can_move_to(world_pos: Vector2, direction: Vector2) -> bool:
+	if not is_tile_passable(world_pos):
+		return false
 	
+	# Test actual movement to detect one-way collisions
+	var test_motion = direction * 0.1
+	var collision = move_and_collide(test_motion, true)
+	return collision == null
+
 func is_tile_passable(world_pos: Vector2) -> bool:
 	var space_state = get_world_2d().direct_space_state
 	var query = PhysicsPointQueryParameters2D.new()
@@ -113,7 +118,6 @@ func select_animation(dir):
 	else:
 		playback.travel("walk")
 		
-	
 func get_forced_direction(world_pos: Vector2) -> Vector2:
 	var space_state = get_world_2d().direct_space_state
 	var query = PhysicsPointQueryParameters2D.new()
