@@ -10,6 +10,10 @@ var moving = false
 var turn_timer := 0.0
 var target_pos = Vector2.ZERO
 var playback : AnimationNodeStateMachinePlayback
+var pending_forced_dir: Vector2 = Vector2.ZERO
+var forced_move_queued := false
+
+
 	
 func _ready():
 	playback = animation_tree["parameters/playback"]
@@ -24,6 +28,10 @@ func _physics_process(delta):
 		if distance < 1:
 			global_position = target_pos
 			moving = false
+
+			# queues a forced movement
+			pending_forced_dir = get_forced_direction(global_position)
+
 			select_animation(Vector2.ZERO)
 			return
 		# move slowly toward tile
@@ -41,7 +49,14 @@ func _physics_process(delta):
 	if turn_timer > 0:
 		turn_timer -= delta
 	
-	input_dir = Input.get_vector("left", "right", "up", "down")
+	# Apply pending forced movement
+	if pending_forced_dir != Vector2.ZERO:
+		input_dir = pending_forced_dir
+		forced_move_queued = true
+		pending_forced_dir = Vector2.ZERO
+	else:
+		input_dir = Input.get_vector("left", "right", "up", "down")
+
 	
 	# Reset timer when no input
 	if input_dir == Vector2.ZERO:
@@ -58,18 +73,24 @@ func _physics_process(delta):
 	if input_dir != last_dir:
 		last_dir = input_dir
 		update_animation_parameters()
-		turn_timer = turn_delay
 		select_animation(Vector2.ZERO)
-		return
+
+		# if not forced movement delay the turn
+		if not forced_move_queued:
+			turn_timer = turn_delay
+			return
+
 	
 	# Don't move if still in turn delay
 	if turn_timer > 0:
 		return
 	
-	# Don't move or animate if blocked
 	var new_target = global_position + input_dir * tile_size
+	
+	# Don't move or animate if blocked
 	if not is_tile_passable(new_target):
-		return  
+		return
+ 
 	
 	# Same direction = move forward
 	target_pos = global_position + input_dir * tile_size
@@ -92,6 +113,23 @@ func select_animation(dir):
 	else:
 		playback.travel("walk")
 		
+	
+func get_forced_direction(world_pos: Vector2) -> Vector2:
+	var space_state = get_world_2d().direct_space_state
+	var query = PhysicsPointQueryParameters2D.new()
+	query.position = world_pos
+	query.exclude = [self]
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+
+	var results = space_state.intersect_point(query)
+	for hit in results:
+		var collider = hit.collider
+		if collider is ForcedMovementTile:
+			return collider.forced_dir
+
+	return Vector2.ZERO
+
 func update_animation_parameters():
 	animation_tree["parameters/Idle/blend_position"] = last_dir
 	animation_tree["parameters/walk/blend_position"] = last_dir

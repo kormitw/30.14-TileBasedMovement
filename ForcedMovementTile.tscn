@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://3h87763pbdn5"]
+
+[ext_resource type="Script" uid="uid://dthak1jaq4khi" path="res://ForcedMovementTile.gd" id="1_8kycg"]
+[ext_resource type="Texture2D" uid="uid://dmainfcwo2xoh" path="res://Sprout Lands - Sprites - Basic pack/Objects/Basic_Furniture.png" id="2_1yoil"]
+[ext_resource type="Texture2D" uid="uid://wv8bsoalxncx" path="res://arrow-16.png" id="3_gtyaj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_chthm"]
+size = Vector2(16, 16)
+
+[node name="ForcedMovementTile" type="Area2D" unique_id=940478831]
+script = ExtResource("1_8kycg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1434006566]
+shape = SubResource("RectangleShape2D_chthm")
+
+[node name="Tile" type="Sprite2D" parent="." unique_id=1334889628]
+texture = ExtResource("2_1yoil")
+hframes = 9
+vframes = 6
+frame = 45
+
+[node name="Arrow" type="Sprite2D" parent="." unique_id=1423999069]
+modulate = Color(0.6419874, 0, 0.089261435, 1)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("3_gtyaj")

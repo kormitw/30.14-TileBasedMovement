@@ -16,7 +16,6 @@
 [ext_resource type="Texture2D" uid="uid://bx3rma25n8o3j" path="res://Sprout Lands - Sprites - Basic pack/Characters/Free Cow Sprites.png" id="12_3mr0t"]
 [ext_resource type="Texture2D" uid="uid://8shh8qvxx3ep" path="res://Sprout Lands - Sprites - Basic pack/Characters/Free Chicken Sprites.png" id="13_6sq2s"]
 [ext_resource type="PackedScene" uid="uid://rj2rd3ldyb5a" path="res://player.tscn" id="14_ooc2g"]
-[ext_resource type="PackedScene" uid="uid://3h87763pbdn5" path="res://ForcedMovementTile.tscn" id="17_a6rn7"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4v3wx"]
 texture = ExtResource("1_6qsgm")
@@ -839,6 +838,7 @@ texture = ExtResource("11_4sf5t")
 6:1/0 = 0
 7:1/0 = 0
 8:1/0 = 0
+8:1/0/custom_data_0 = Vector2i(0, 1)
 0:2/0 = 0
 1:2/0 = 0
 2:2/0 = 0
@@ -882,6 +882,8 @@ texture = ExtResource("4_wbpbn")
 0:3/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_028i1"]
+custom_data_layer_0/name = "forced_down"
+custom_data_layer_0/type = 6
 sources/0 = SubResource("TileSetAtlasSource_urahp")
 sources/1 = SubResource("TileSetAtlasSource_cskkv")
 
@@ -989,9 +991,6 @@ size = Vector2(80, 16)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wbpbn"]
 size = Vector2(128, 96)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_a6rn7"]
-size = Vector2(16, 16)
-
 [node name="Map" type="Node2D" unique_id=1719622059]
 
 [node name="Water" type="TileMapLayer" parent="." unique_id=1238042780]
@@ -1024,6 +1023,17 @@ position = Vector2(8, 0)
 tile_map_data = PackedByteArray("AAAoABIAAgAAAAAAAAAnABUAAgAAAAAAAAAkABMAAgAAAAEAABAoABMAAwAAAAIAAAAoABQAAwAAAAMAAAApABMAAwABAAIAAAApABQAAwABAAMAAAAkABQAAwABAAAAABAkABUAAwABAAEAABAlABQAAwAAAAAAABAlABUAAwAAAAEAABAlABEAAwAAAAAAAAAlABIAAwAAAAEAAAAmABEAAwABAAAAAAAmABIAAwABAAEAAAAjABMAAgAAAAEAAAA=")
 tile_set = SubResource("TileSet_iwan2")
 
+[node name="CharacterBody2D" parent="." unique_id=1146129331 instance=ExtResource("14_ooc2g")]
+position = Vector2(392, 328)
+collision_layer = 2
+safe_margin = 0.001
+
+[node name="Camera2D" type="Camera2D" parent="CharacterBody2D" unique_id=190455001]
+zoom = Vector2(8, 8)
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="CharacterBody2D" unique_id=1784295097]
+remote_path = NodePath("../Camera2D")
+
 [node name="Collisions" type="StaticBody2D" parent="." unique_id=334518748]
 position = Vector2(24, -16)
 
@@ -1041,7 +1051,7 @@ position = Vector2(360, 288)
 polygon = PackedVector2Array(0, 0, 144, 0, 144, -80, -176, -80, -176, -32, 0, -32)
 
 [node name="Border1" type="CollisionPolygon2D" parent="Collisions" unique_id=1530720699]
-position = Vector2(133, 368)
+position = Vector2(136, 368)
 polygon = PackedVector2Array(0, 0, 320, 0, 320, 48, 336, 48, 336, 64, 352, 64, 352, 80, -32, 80, -32, -208, 480, -208, 480, -128, 432, -128, 432, -152, 432, -160, 416, -160, 416, -192, 32, -192, 32, -176, 16, -176, 16, -160, 0, -160, 0, -112, -16, -112, -16, -16, 0, -16)
 
 [node name="Border2" type="CollisionPolygon2D" parent="Collisions" unique_id=1558659140]
@@ -1052,40 +1062,6 @@ polygon = PackedVector2Array(0, 0, 80, 0, 80, 32, 96, 32, 96, 112, 80, 112, 80, 
 position = Vector2(168, 304)
 polygon = PackedVector2Array(0, 0, 0, 32, 48, 32, 48, 16, 64, 16, 64, -16, 32, -16, 32, 0)
 
-[node name="Rock" type="CollisionShape2D" parent="Collisions" unique_id=1047893792]
-position = Vector2(176, 248)
-shape = SubResource("RectangleShape2D_a6rn7")
-
-[node name="ForcedMovementTile" parent="." unique_id=940478831 instance=ExtResource("17_a6rn7")]
-position = Vector2(264, 248)
-forced_dir = Vector2(1, 0)
-
-[node name="ForcedMovementTile2" parent="." unique_id=543432001 instance=ExtResource("17_a6rn7")]
-position = Vector2(264, 312)
-forced_dir = Vector2(1, 0)
-
-[node name="ForcedMovementTile3" parent="." unique_id=7456830 instance=ExtResource("17_a6rn7")]
-position = Vector2(280, 312)
-rotation = 1.5707964
-forced_dir = Vector2(0, 1)
-
-[node name="ForcedMovementTile4" parent="." unique_id=1477170327 instance=ExtResource("17_a6rn7")]
-position = Vector2(280, 328)
-rotation = -3.1415927
-forced_dir = Vector2(-1, 0)
-
-[node name="ForcedMovementTile5" parent="." unique_id=1020623282 instance=ExtResource("17_a6rn7")]
-position = Vector2(264, 328)
-rotation = -1.5707964
-forced_dir = Vector2(0, -1)
-
-[node name="CharacterBody2D" parent="." unique_id=1146129331 instance=ExtResource("14_ooc2g")]
-position = Vector2(392, 328)
-collision_layer = 2
-safe_margin = 0.001
-
-[node name="Camera2D" type="Camera2D" parent="CharacterBody2D" unique_id=190455001]
-zoom = Vector2(5, 5)
-
-[node name="RemoteTransform2D" type="RemoteTransform2D" parent="CharacterBody2D" unique_id=1784295097]
-remote_path = NodePath("../Camera2D")
+[node name="Rock" type="CollisionPolygon2D" parent="Collisions" unique_id=552259880]
+position = Vector2(168, 256)
+polygon = PackedVector2Array(0, 0, 16, 0, 16, -16, 0, -16)
