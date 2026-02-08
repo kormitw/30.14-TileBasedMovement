@@ -1288,13 +1288,13 @@ position = Vector2(264, 328)
 rotation = -1.5707964
 forced_dir = Vector2(0, -1)
 
-[node name="ForcedMovementTile6" parent="." unique_id=1334104404 instance=ExtResource("17_a6rn7")]
-position = Vector2(376, 248)
-
 [node name="CharacterBody2D" parent="." unique_id=1146129331 instance=ExtResource("14_ooc2g")]
 position = Vector2(520, 312)
 collision_layer = 2
 safe_margin = 0.001
+tile_size = null
+move_speed = null
+turn_delay = null
 
 [node name="Camera2D" type="Camera2D" parent="CharacterBody2D" unique_id=190455001]
 zoom = Vector2(5, 5)
